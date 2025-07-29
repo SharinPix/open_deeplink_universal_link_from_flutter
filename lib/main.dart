@@ -159,6 +159,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 final deeplink = navigationAction.request.url;
 
                 if (deeplink != null && url != navigationAction.request.url) {
+                  //unversal link it should open the app directly on android
+                  if (deeplink.scheme == 'https' && deeplink.host == 'app.sharinpix.com' && Platform.isAndroid) {
+                    launchUrl(deeplink, mode: LaunchMode.externalApplication);
+                    return NavigationActionPolicy.CANCEL;
+                  }
+
+                  //deep link it should open the app directly on android
                   if (deeplink.scheme == 'sharinpix') {
                     launchUrl(deeplink, mode: LaunchMode.externalApplication);
                     return NavigationActionPolicy.CANCEL;
