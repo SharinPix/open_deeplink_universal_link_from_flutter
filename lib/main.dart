@@ -159,13 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 final deeplink = navigationAction.request.url;
 
                 if (deeplink != null && url != navigationAction.request.url) {
-                  //unversal link it should open the app directly on android
                   if (deeplink.scheme == 'https' && deeplink.host == 'app.sharinpix.com' && Platform.isAndroid) {
                     launchUrl(deeplink, mode: LaunchMode.externalApplication);
                     return NavigationActionPolicy.CANCEL;
                   }
 
-                  //deep link it should open the app directly on android
                   if (deeplink.scheme == 'sharinpix') {
                     launchUrl(deeplink, mode: LaunchMode.externalApplication);
                     return NavigationActionPolicy.CANCEL;
@@ -174,9 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 return NavigationActionPolicy.ALLOW;
               },
-              initialSettings: InAppWebViewSettings(
-                useShouldOverrideUrlLoading: true,
-              ),
               onLoadError: (controller, url, code, message) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -185,6 +180,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               },
+              onCreateWindow: (controller, createWindowRequest) async {
+                final url = createWindowRequest.request.url;
+                if (url != null) {
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                }
+                return true;
+              },
+              initialSettings: InAppWebViewSettings(
+                javaScriptEnabled: true,
+                useShouldOverrideUrlLoading: true,
+                javaScriptCanOpenWindowsAutomatically: true,
+                supportMultipleWindows: true,
+              ),
             ),
     );
   }
