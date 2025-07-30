@@ -190,10 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return true;
               },
               initialSettings: InAppWebViewSettings(
-                javaScriptEnabled: true,
                 useShouldOverrideUrlLoading: true,
-                javaScriptCanOpenWindowsAutomatically: true,
-                supportMultipleWindows: true,
               ),
             ),
     );
